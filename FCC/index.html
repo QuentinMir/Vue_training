@@ -3,15 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <title>Vue 3 basic</title>
+    <style>
+        /*v-cloak pour charger le dom quand tout est pret*/
+        [v-cloak] {
+            display: none;
+        }
+
+        .box {
+            background-color: darkcyan;
+            width: 300px;
+            height: 300px;
+        }
+    </style>
 </head>
 <body>
 
-<div id="app">{{greeting}}
+<!--v-cloak pour charger le dom quand tout est pret-->
+<div id="app" v-cloak>{{greeting}}
     <br>
     {{response}}
 
     <!--2 way databiding-->
-    <input type="text" v-model="greeting">
+    <!--Bind event sur une touche-->
+    <input @keyup.enter="greet" type="text" v-model="greeting">
+
+    <hr>
+
+    <!--le if-->
+    <div v-if="isVisible">Jui visible :o</div>
+    <div v-else-if="!isVisible">Jui pas visible :(</div>
+    <div v-else>c cho... (on ne passe pas dedans puisque !isVisible dans le else if</div>
+
+    <hr>
+
+    <!--pareil que avec le @-->
+    <button v-on:click="isVisible = !isVisible">Toggle box</button>
+    <button @click="isVisible = !isVisible">Toggle box</button>
+
+    <!--Avec une méthode-->
+    <button @click="toggleBox">Toggle box</button>
+    <div class="box" v-if="isVisible"></div>
+
 </div>
 
 <script src="https://unpkg.com/vue@3"></script>
@@ -20,7 +52,16 @@
         data: function () {
             return {
                 greeting: 'Hello there',
-                response: 'General Kenobi'
+                response: 'General Kenobi',
+                isVisible: true
+            }
+        },
+        methods: {
+            toggleBox() {
+                this.isVisible = !this.isVisible
+            },
+            greet() {
+                console.log(this.greeting)
             }
         }
     })
