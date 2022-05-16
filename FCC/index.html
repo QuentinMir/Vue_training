@@ -14,6 +14,11 @@
             width: 300px;
             height: 300px;
         }
+
+        input {
+            display: block;
+            margin: 10px;
+        }
     </style>
 </head>
 <body>
@@ -44,7 +49,9 @@
     <button @click="toggleBox">Toggle box</button>
     <div class="box" v-if="isVisible"></div>
 
+    <login-form></login-form>
 </div>
+
 
 <script src="https://unpkg.com/vue@3"></script>
 <script>
@@ -53,7 +60,7 @@
             return {
                 greeting: 'Hello there',
                 response: 'General Kenobi',
-                isVisible: true
+                isVisible: false
             }
         },
         methods: {
@@ -65,8 +72,33 @@
             }
         }
     })
+    /*.prevent permet de ne pas recharger la page. (prevent default)*/
+    app.component('login-form', {
+        template: `
+          <form @submit.prevent="onSubmit">
+          <h1>{{ title }}</h1>
+          <input type="email" v-model="email">
+          <input type="password" v-model="password">
+          <button type="submit">Se connecter</button>
+          </form>
+        `,
+        data() {
+            return {
+                title: 'Login Form',
+                email: '',
+                password: ''
+            }
+        },
+        methods: {
+            onSubmit() {
+                console.log('submitted ' + this.email + ' ' + this.password)
+            }
+        }
+    })
+
     app.mount("#app")
 
 </script>
+
 </body>
 </html>
