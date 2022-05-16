@@ -72,28 +72,72 @@
             }
         }
     })
-    /*.prevent permet de ne pas recharger la page. (prevent default)*/
+    /** .prevent permet de ne pas recharger la page. (prevent default)*/
+    /**  v-bind pour faire passer la variable a l'enfant */
+    /**  Dans props on met l'équivalent des @Input */
+    /**  v-bind:input === [input], sinon on peut le définir direct sans passer comme une variable input ="chaussure"  */
     app.component('login-form', {
         template: `
           <form @submit.prevent="onSubmit">
           <h1>{{ title }}</h1>
-          <input type="email" v-model="email">
-          <input type="password" v-model="password">
+<!--          <custom-input type="email" :label="emailLabel" v-model="email"></custom-input>
+          <custom-input type="password" :label="passwordLabel" v-model="password"></custom-input>-->
+          <custom-input v-for="(input, i) in inputs" :key="i" type="{{input.type}}" :label="input.label" v-model="input.value"></custom-input>
           <button type="submit">Se connecter</button>
           </form>
         `,
+        components: ['custom-input'], /* injection du composant enfant l'enfant */
         data() {
             return {
                 title: 'Login Form',
-                email: '',
-                password: ''
+/*                email: '',
+                password: '',*/
+                inputs: [
+                    {
+                        label: 'Email',
+                        value: '',
+                        type: 'email'
+                    },
+                    {
+                        label: 'Password',
+                        value: '',
+                        type: 'password'
+                    }
+                ],
             }
         },
         methods: {
             onSubmit() {
-                console.log('submitted ' + this.email + ' ' + this.password)
+                console.log('submitted ' + this.inputs[0].value, this.inputs[1].value)
             }
         }
+    })
+    app.component('custom-input', {
+        template: `
+          <label>
+          {{ label }}
+          <input :type="type" v-model="inputFieldValue">
+          </label>
+        `,
+        props: ['label', 'type', 'modelValue'],
+        computed: {
+            inputFieldValue: {
+                get() {
+                    return this.modelValue
+                },
+                set(value) {
+                    /** le premier argument est le type d'event et le 2eme est la valeur a travers l'event */
+                    /** modelValue est écouté par les v-models dans le parent qui ont bindé sur email et passeword, donc la method onSubmit récupère la data de l'enfant */
+                    this.$emit('update:modelValue', value)
+                }
+            }
+        },
+        //  data() {
+        //    return {
+        /** cette variable sera synchronisée avec ce qu'il y a dans le champ de l'input, il faut faire remonter l'info au parent*/
+        //     inputFieldValue: ''
+        //  }
+        // }
     })
 
     app.mount("#app")
