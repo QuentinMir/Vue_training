@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue 3 basic</title>
+</head>
+<body>
+
+<div id="app">{{greeting}}
+    <br>
+    {{response}}
+
+    <!--2 way databiding-->
+    <input type="text" v-model="greeting">
+</div>
+
+<script src="https://unpkg.com/vue@3"></script>
+<script>
+    let app = Vue.createApp({
+        data: function () {
+            return {
+                greeting: 'Hello there',
+                response: 'General Kenobi'
+            }
+        }
+    })
+    app.mount("#app")
+
+</script>
+</body>
+</html>
