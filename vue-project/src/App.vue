@@ -1,6 +1,7 @@
-<script setup lang="ts">
+<script setup>
 import {RouterLink, RouterView} from 'vue-router'
-import HelloWorld from '@/components/HelloWorld.vue'
+
+
 </script>
 
 <template>
@@ -21,109 +22,59 @@ import HelloWorld from '@/components/HelloWorld.vue'
       </router-link>
 
     </nav>
-<!--    <router-link @click="toggleSidebar" class="top-bar-cart-link">
+    <div @click="toggleSidebar" class="top-bar-cart-link">
       <i class="icofont-cart-alt icofont-1x"></i>
       <span>Cart ( {{ totalQuantity() }} )</span>
-    </router-link>-->
+    </div>
   </header>
 
-  <RouterView/>
+  <RouterView :inventory="inventory" :addToCart="addToCart"/>
+
+  <Sidebar
+      v-if="showSidebar"
+      :toggle="toggleSidebar"
+      :cart="cart"
+      :inventory="inventory"
+  />
 </template>
 
-<style>
-@import '@/assets/base.css';
+<script>
+import Sidebar from './components/Sidebar.vue'
+import food from './food.json'
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
 
-  font-weight: normal;
-}
+export default {
+  components: {
+    Sidebar
+  },
+  data() {
+    return {
+      showSidebar: false,
+      inventory: food,
+      cart: {}
 
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
+    }
+  },
+  methods: {
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
+    addToCart(name, quantity) {
+      if (!this.cart[name]) {
+        this.cart[name] = 0;
+      }
+      this.cart[name] += quantity
+    },
+    toggleSidebar() {
+      this.showSidebar = !this.showSidebar
+    },
+    totalQuantity() {
+      let quantities = Object.values(this.cart);
+      let totalQuantity = 0;
+      quantities.forEach(quantity => {
+        totalQuantity += quantity
+      });
+      return totalQuantity
+    }
   }
 }
+</script>
 
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
-
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
-</style>
