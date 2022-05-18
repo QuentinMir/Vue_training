@@ -13,6 +13,33 @@
     <Customer :name=name metier="Champion"/>
     <Employee/>
 
+    <Counter/>
+
+    <Registration/>
+
+    <table class="table">
+      <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Company</th>
+        <th scope="col">Website</th>
+        <th scope="col">Location</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr v-for="user of users" :key="user.id">
+        <td>{{ user.id }}</td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.company.name }}</td>
+        <td>{{ user.website }}</td>
+        <td>{{ user.address.city }}</td>
+      </tr>
+      </tbody>
+    </table>
+
 
   </div>
 
@@ -22,15 +49,35 @@
 <script>
 import Customer from '@/components/Customer.vue';
 import Employee from '@/components/Employee.vue';
+import Counter from '@/components/Counter.vue';
+import Registration from '@/components/Registration.vue';
+import {UserService} from "./components/services/UserService";
 
 export default {
   components: {
     Customer,
+    Counter,
+    Registration,
     Employee
   },
   data() {
     return {
-      name: 'Luigi'
+      name: 'Luigi',
+      users: [],
+      loading: false,
+      errorMsg: null
+    }
+  },
+  created: async function () {
+    try {
+      this.loading = true;
+      let response = await UserService.getAllUsers();
+      this.loading = false;
+      this.users = response.data;
+      console.log(this.users)
+    } catch (error) {
+      this.loading = false;
+      this.errorMsg = error;
     }
   }
 }
