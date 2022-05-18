@@ -5,4 +5,9 @@ export class UserService {
         let url = 'https://jsonplaceholder.typicode.com/users';
         return axios.get(url);
     }
+
+    static getUserById(id) {
+        let url = 'https://jsonplaceholder.typicode.com/users'+ id;
+        return axios.get(url)
+    }
 }

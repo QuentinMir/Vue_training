@@ -10,14 +10,7 @@
       </div>
     </div>
 
-    <Customer :name=name metier="Champion"/>
-    <Employee/>
-
-    <Counter/>
-
-    <Registration/>
-
-    <table class="table">
+    <table v-if="!loading" class="table">
       <thead>
       <tr>
         <th scope="col">#</th>
@@ -39,6 +32,22 @@
       </tr>
       </tbody>
     </table>
+
+    <div v-if="loading">
+      <img src="assets/giphy.gif" alt="loading">
+    </div>
+
+    <div v-if="errorMsg">
+      <h6>{{ errorMsg }}</h6>
+    </div>
+
+
+    <Customer :name=name metier="Champion"/>
+    <Employee/>
+
+    <Counter/>
+
+    <Registration/>
 
 
   </div>
